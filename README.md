@@ -1,10 +1,10 @@
 # peco installer
 
 ```bash
-curl -s https://raw.githubusercontent.com/utahta/peco-get/master/get.sh | sh
+curl -s https://raw.githubusercontent.com/utahta/peco-get/master/get | sh
 ```
 or
 ```bash
-curl -L https://raw.githubusercontent.com/utahta/peco-get/master/get.sh -o get.sh
-PECO_BIN=/path/to ./get.sh
+curl -L https://raw.githubusercontent.com/utahta/peco-get/master/get -o peco-get
+PECO_BIN=/path/to sh ./peco-get
 ```
