@@ -3,32 +3,32 @@
 # forked from https://glide.sh/get and modified for peco
 
 initInstallation() {
-	if [ -z "$PECO_BIN" ]; then
+  if [ -z "$PECO_BIN" ]; then
     PECO_BIN="${HOME}/bin"
   fi
 }
 
 initArch() {
-	ARCH=$(uname -m)
-	case $ARCH in
-		armv5*) ARCH="armv5";;
-		armv6*) ARCH="armv6";;
-		armv7*) ARCH="armv7";;
-		aarch64) ARCH="arm64";;
-		x86) ARCH="386";;
-		x86_64) ARCH="amd64";;
-		i686) ARCH="386";;
-		i386) ARCH="386";;
-	esac
+  ARCH=$(uname -m)
+  case $ARCH in
+    armv5*) ARCH="armv5";;
+    armv6*) ARCH="armv6";;
+    armv7*) ARCH="armv7";;
+    aarch64) ARCH="arm64";;
+    x86) ARCH="386";;
+    x86_64) ARCH="amd64";;
+    i686) ARCH="386";;
+    i386) ARCH="386";;
+  esac
 }
 
 initOS() {
-	OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
 
-	case "$OS" in
-		# Minimalist GNU for Windows
-		mingw*) OS='windows';;
-	esac
+  case "$OS" in
+    # Minimalist GNU for Windows
+    mingw*) OS='windows';;
+  esac
 }
 
 initFileExt() {
@@ -49,55 +49,55 @@ initTag() {
 }
 
 downloadFile() {
-	LATEST_RELEASE_URL="https://api.github.com/repos/peco/peco/releases/tags/$TAG"
-	if type "curl" > /dev/null; then
-		LATEST_RELEASE_JSON=$(curl -s "$LATEST_RELEASE_URL")
-	elif type "wget" > /dev/null; then
-		LATEST_RELEASE_JSON=$(wget -q -O - "$LATEST_RELEASE_URL")
-	fi
-	PECO_DIST="peco_${OS}_${ARCH}${FILE_EXT}"
-	# || true forces this command to not catch error if grep does not find anything
+  LATEST_RELEASE_URL="https://api.github.com/repos/peco/peco/releases/tags/$TAG"
+  if type "curl" > /dev/null; then
+    LATEST_RELEASE_JSON=$(curl -s "$LATEST_RELEASE_URL")
+  elif type "wget" > /dev/null; then
+    LATEST_RELEASE_JSON=$(wget -q -O - "$LATEST_RELEASE_URL")
+  fi
+  PECO_DIST="peco_${OS}_${ARCH}${FILE_EXT}"
+  # || true forces this command to not catch error if grep does not find anything
   DOWNLOAD_URL=$(echo "$LATEST_RELEASE_JSON" | grep 'browser_' | cut -d\" -f4 | grep "$PECO_DIST") || true
-	if [ -z "$DOWNLOAD_URL" ]; then
+  if [ -z "$DOWNLOAD_URL" ]; then
     echo "Sorry, we dont have a dist for your system: $OS $ARCH"
     exit 1
-	else
-		PECO_TMP_FILE="/tmp/$PECO_DIST"
+  else
+    PECO_TMP_FILE="/tmp/$PECO_DIST"
     echo "Downloading $DOWNLOAD_URL"
-		if type "curl" > /dev/null; then
-			curl -L "$DOWNLOAD_URL" -o "$PECO_TMP_FILE"
-		elif type "wget" > /dev/null; then
-			wget -q -O "$PECO_TMP_FILE" "$DOWNLOAD_URL"
-		fi
-	fi
+    if type "curl" > /dev/null; then
+      curl -L "$DOWNLOAD_URL" -o "$PECO_TMP_FILE"
+    elif type "wget" > /dev/null; then
+      wget -q -O "$PECO_TMP_FILE" "$DOWNLOAD_URL"
+    fi
+  fi
 }
 
 installFile() {
-	PECO_TMP="/tmp/peco_$TAG"
-	mkdir -p "$PECO_TMP"
-	tar xf "$PECO_TMP_FILE" -C "$PECO_TMP"
-	PECO_TMP_BIN="$PECO_TMP/peco_${OS}_${ARCH}/peco"
-	cp "$PECO_TMP_BIN" "$PECO_BIN"
+  PECO_TMP="/tmp/peco_$TAG"
+  mkdir -p "$PECO_TMP"
+  tar xf "$PECO_TMP_FILE" -C "$PECO_TMP"
+  PECO_TMP_BIN="$PECO_TMP/peco_${OS}_${ARCH}/peco"
+  cp "$PECO_TMP_BIN" "$PECO_BIN"
 }
 
 bye() {
-	result=$?
-	if [ "$result" != "0" ]; then
-		echo "Fail to install $PROJECT_NAME"
-	fi
-	exit $result
+  result=$?
+  if [ "$result" != "0" ]; then
+    echo "Fail to install $PROJECT_NAME"
+  fi
+  exit $result
 }
 
 testVersion() {
-	set +e
-	PECO="$(which peco)"
-	if [ "$?" = "1" ]; then
-		echo "peco not found. Did you add "'$PECO_BIN'" to your "'$PATH?'
-		exit 1
-	fi
-	set -e
-	PECO_VERSION=$(peco --version)
-	echo "$PECO_VERSION installed succesfully"
+  set +e
+  PECO="$(which peco)"
+  if [ "$?" = "1" ]; then
+    echo "peco not found. Did you add "'$PECO_BIN'" to your "'$PATH?'
+    exit 1
+  fi
+  set -e
+  PECO_VERSION=$(peco --version)
+  echo "$PECO_VERSION installed succesfully"
 }
 
 # Execution
