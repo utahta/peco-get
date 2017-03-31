@@ -45,7 +45,7 @@ initTag() {
   elif type "wget" > /dev/null; then
     FETCH="wget -q -O -"
   fi
-  TAG=$($FETCH https://api.github.com/repos/peco/peco/releases/latest | grep 'tag_name' | sed -e 's/[\",]//g' | awk '{print $2}')
+  TAG=$($FETCH https://api.github.com/repos/peco/peco/releases/latest | grep 'tag_name' | sed -e 's/[",]//g' | awk '{print $2}')
 }
 
 downloadFile() {
@@ -83,7 +83,7 @@ installFile() {
 bye() {
   result=$?
   if [ "$result" != "0" ]; then
-    echo "Fail to install $PROJECT_NAME"
+    echo "Fail to install peco"
   fi
   exit $result
 }
