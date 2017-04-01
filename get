@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# forked from https://glide.sh/get and modified for peco
+# forked from https://github.com/Masterminds/glide.sh/blob/master/get and modified for peco
 
 initInstallation() {
   if [ -z "$PECO_BIN" ]; then
